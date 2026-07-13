@@ -1,0 +1,15 @@
+vbcu_env/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+uploads/*
+!uploads/.gitkeep
+reports/*
+!reports/.gitkeep
+waveform/*
+!waveform/.gitkeep
+.streamlit/secrets.toml
+.model_cache/
+.nltk_data/
+.matplotlib/
+.ffmpeg_bin/
