@@ -68,7 +68,7 @@ def analyse_audio(audio_name: str, audio_data: bytes, concept: dict[str, Any]) -
     try:
         normalized_path = normalize_audio(audio_path, normalized_path)
         transcript = transcribe_audio(normalized_path)
-        metrics = extract_audio_features(normalized_path, transcript)
+        metrics = extract_audio_features(normalized_path)
         waveform_path = create_waveform(normalized_path, WAVEFORM_DIR / f"{identifier}.png")
         semantic_score = semantic_similarity(
             transcript, concept["reference_explanation"]
@@ -93,6 +93,7 @@ def analyse_audio(audio_name: str, audio_data: bytes, concept: dict[str, Any]) -
 def render_analysis(data: dict[str, Any], detailed: bool = True) -> None:
     """Render analysis fields consistently in the Analysis, Results, and Report views."""
     score, metrics = data["score"], data["metrics"]
+    print("DEBUG METRICS:", metrics)
     st.subheader(f"Analysis: {data['topic']}")
     columns = st.columns(4)
     columns[0].metric("Overall score", f"{score['overall_score']:.1f}%")

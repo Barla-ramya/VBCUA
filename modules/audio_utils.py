@@ -31,7 +31,8 @@ def normalize_audio(audio_path, output_path):
 
 
 
-def extract_audio_features(audio_path):
+def extract_audio_features(audio_path, sample_rate=None):
+    print("NEW extract_audio_features loaded")
     """
     Extract audio characteristics
     """
@@ -43,7 +44,7 @@ def extract_audio_features(audio_path):
     )
 
 
-    duration = librosa.get_duration(
+    "duration_seconds" = librosa.get_duration(
         y=audio,
         sr=sr
     )
@@ -128,5 +129,5 @@ def generate_waveform(audio_path, output_path):
 
     plt.close()
 
-
+    print(features)
     return output_path
