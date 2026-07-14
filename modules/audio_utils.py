@@ -7,7 +7,7 @@ from pathlib import Path
 
 def normalize_audio(audio_path, output_path):
     """
-    Normalize audio volume and save processed file
+    Normalize audio volume and save processed file.
     """
 
     audio, sr = librosa.load(
@@ -30,11 +30,9 @@ def normalize_audio(audio_path, output_path):
     return output_path
 
 
-
-def extract_audio_features(audio_path, sample_rate=None):
-    print("NEW extract_audio_features loaded")
+def extract_audio_features(audio_path):
     """
-    Extract audio characteristics
+    Extract audio features required by app.py
     """
 
     audio, sr = librosa.load(
@@ -43,91 +41,86 @@ def extract_audio_features(audio_path, sample_rate=None):
         mono=True
     )
 
-
-    "duration_seconds" = librosa.get_duration(
+    # Duration
+    duration_seconds = librosa.get_duration(
         y=audio,
         sr=sr
     )
 
-
+    # RMS Energy
     rms_energy = float(
         np.mean(
-            librosa.feature.rms(
-                y=audio
-            )
+            librosa.feature.rms(y=audio)
         )
     )
 
-
-    silence = librosa.effects.split(
-        audio,
-        top_db=30
+    # Zero Crossing Rate
+    zcr = float(
+        np.mean(
+            librosa.feature.zero_crossing_rate(y=audio)
+        )
     )
 
+    # Silence Detection
+    threshold = 0.02
 
-    speech_duration = sum(
-        end-start
-        for start,end in silence
-    ) / sr
-
-
-    pause_ratio = 1 - (
-        speech_duration / duration
+    silent_samples = np.sum(
+        np.abs(audio) < threshold
     )
 
+    silence_seconds = silent_samples / sr
+
+    pause_ratio = (
+        silence_seconds / duration_seconds
+        if duration_seconds > 0
+        else 0
+    )
+
+    # Estimate Speech Rate
+    speech_rate_wpm = max(
+        80,
+        min(
+            180,
+            int((1 - pause_ratio) * 140)
+        )
+    )
+
+    # Tempo
+    tempo, _ = librosa.beat.beat_track(
+        y=audio,
+        sr=sr
+    )
 
     return {
-
-        "duration": round(duration,2),
-
-        "rms_energy": round(
-            rms_energy,
-            4
-        ),
-
-        "pause_ratio": round(
-            pause_ratio,
-            4
-        ),
-
-        "sample_rate": sr
+        "duration_seconds": float(duration_seconds),
+        "sample_rate": int(sr),
+        "rms_energy": rms_energy,
+        "zero_crossing_rate": zcr,
+        "tempo": float(tempo),
+        "silence_seconds": float(silence_seconds),
+        "pause_ratio": float(pause_ratio),
+        "speech_rate_wpm": int(speech_rate_wpm)
     }
-
-
-
-def generate_waveform(audio_path, output_path):
+    def generate_waveform(audio_path, output_path):
+    import librosa
+    import matplotlib.pyplot as plt
+    from pathlib import Path
 
     audio, sr = librosa.load(
         str(audio_path),
-        sr=16000
+        sr=16000,
+        mono=True
     )
-
 
     plt.figure(figsize=(10,3))
-
     plt.plot(audio)
-
-    plt.title(
-        "Audio Waveform"
-    )
-
-    plt.xlabel(
-        "Samples"
-    )
-
-    plt.ylabel(
-        "Amplitude"
-    )
-
-
+    plt.title("Audio Waveform")
+    plt.xlabel("Samples")
+    plt.ylabel("Amplitude")
     plt.tight_layout()
 
-
-    plt.savefig(
-        output_path
-    )
-
+    output_path = Path(output_path)
+    plt.savefig(output_path)
     plt.close()
 
-    print(features)
     return output_path

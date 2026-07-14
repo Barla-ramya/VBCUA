@@ -13,7 +13,6 @@ def configure_ffmpeg() -> None:
     """Expose imageio's managed FFmpeg executable to Whisper's subprocesses."""
     try:
         import imageio_ffmpeg
-
         source = Path(imageio_ffmpeg.get_ffmpeg_exe())
         # Whisper invokes the command specifically as ``ffmpeg``. The managed
         # binary has a platform-specific filename, so expose a stable alias.

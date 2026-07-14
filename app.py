@@ -100,7 +100,6 @@ def render_analysis(data: dict[str, Any], detailed: bool = True) -> None:
     columns[1].metric("Semantic similarity", f"{score['semantic_score']:.1f}%")
     columns[2].metric("Pause ratio", f"{metrics['pause_ratio'] * 100:.1f}%")
     columns[3].metric("Filler words", score["total_fillers"])
-
     if not detailed:
         return
 
