@@ -93,7 +93,6 @@ def analyse_audio(audio_name: str, audio_data: bytes, concept: dict[str, Any]) -
 def render_analysis(data: dict[str, Any], detailed: bool = True) -> None:
     """Render analysis fields consistently in the Analysis, Results, and Report views."""
     score, metrics = data["score"], data["metrics"]
-    print("DEBUG METRICS:", metrics)
     st.subheader(f"Analysis: {data['topic']}")
     columns = st.columns(4)
     columns[0].metric("Overall score", f"{score['overall_score']:.1f}%")

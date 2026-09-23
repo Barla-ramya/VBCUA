@@ -9,7 +9,6 @@ def normalize_audio(audio_path, output_path):
     """
     Normalize audio volume and save processed file.
     """
-
     audio, sr = librosa.load(
         str(audio_path),
         sr=16000,
@@ -32,9 +31,8 @@ def normalize_audio(audio_path, output_path):
 
 def extract_audio_features(audio_path):
     """
-    Extract audio features required by app.py
+    Extract audio features required by app.py.
     """
-
     audio, sr = librosa.load(
         str(audio_path),
         sr=16000,
@@ -101,18 +99,19 @@ def extract_audio_features(audio_path):
         "pause_ratio": float(pause_ratio),
         "speech_rate_wpm": int(speech_rate_wpm)
     }
-    def generate_waveform(audio_path, output_path):
-    import librosa
-    import matplotlib.pyplot as plt
-    from pathlib import Path
 
+
+def generate_waveform(audio_path, output_path):
+    """
+    Generate and save an audio waveform image.
+    """
     audio, sr = librosa.load(
         str(audio_path),
         sr=16000,
         mono=True
     )
 
-    plt.figure(figsize=(10,3))
+    plt.figure(figsize=(10, 3))
     plt.plot(audio)
     plt.title("Audio Waveform")
     plt.xlabel("Samples")

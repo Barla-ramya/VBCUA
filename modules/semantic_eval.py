@@ -12,10 +12,10 @@ def load_model(model_name: str = SENTENCE_MODEL) -> Any:
     if _MODEL is None:
         try:
             from sentence_transformers import SentenceTransformer
-            # The model is pre-fetched on first setup.  Offline mode prevents
-            # every analysis from making an unnecessary hub metadata request.
+            # Download the model on first use when it is not already cached.
+            # This is necessary for a fresh deployment such as Community Cloud.
             _MODEL = SentenceTransformer(
-                model_name, cache_folder=str(MODEL_CACHE_DIR), local_files_only=True
+                model_name, cache_folder=str(MODEL_CACHE_DIR)
             )
         except Exception as exc:
             raise RuntimeError("Unable to load the semantic model. Check internet access and dependencies.") from exc

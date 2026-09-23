@@ -7,7 +7,7 @@ from modules.audio_utils import extract_audio_features, generate_waveform, norma
 def test_audio_metrics_and_waveform(tmp_path) -> None:
     audio = tmp_path / "sample.wav"
     sf.write(audio, .1 * np.sin(2 * np.pi * 220 * np.linspace(0, 1, 16000)), 16000)
-    metrics = extract_audio_features(audio, "one two three")
+    metrics = extract_audio_features(audio)
     image = generate_waveform(audio, tmp_path / "wave.png")
     assert metrics["duration_seconds"] == 1.0
     assert 0 <= metrics["pause_ratio"] <= 1
