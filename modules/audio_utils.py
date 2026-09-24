@@ -88,13 +88,14 @@ def extract_audio_features(audio_path):
         y=audio,
         sr=sr
     )
+    tempo = float(np.asarray(tempo).reshape(-1)[0])
 
     return {
         "duration_seconds": float(duration_seconds),
         "sample_rate": int(sr),
         "rms_energy": rms_energy,
         "zero_crossing_rate": zcr,
-        "tempo": float(tempo),
+        "tempo": tempo,
         "silence_seconds": float(silence_seconds),
         "pause_ratio": float(pause_ratio),
         "speech_rate_wpm": int(speech_rate_wpm)
